@@ -6,7 +6,7 @@ load_dotenv()
 def main():
     load_dotenv()
     try:
-        settings_module = os.getenv('DJANGO_SETTINGS_MODULE')
+        settings_module = os.getenv('SETTINGS_MODULE')
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
         print(f"#####---===>> Using settings module: {settings_module}")
 
