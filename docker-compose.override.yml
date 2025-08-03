@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    environment:
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=core.settings.local
+    volumes:
+      - .:/app
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py create_sample_data &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  celery:
+    environment:
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=core.settings.local
+
+  celery-beat:
+    environment:
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=core.settings.local
+
+
+  nginx:
+    profiles:
+      - production 
