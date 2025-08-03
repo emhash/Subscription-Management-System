@@ -114,6 +114,14 @@ python manage.py test_celery
 ```bash
 python manage.py runserver
 ```
+Run Celery:
+```bash
+celery -A core worker --loglevel=INFO --pool=solo
+```
+Run Celery Beat:
+```bash
+celery -A core beat --scheduler django_celery_beat.schedulers:DatabaseScheduler
+```
 
 ## Project Architecture:
 
