@@ -2,15 +2,6 @@
 A subscription management system with MVT architecture and REST API
 
 
-## Features
-- User authentication with JWT tokens
-- Subscription plan management
-- Real-time currency exchange rates
-- Background task processing with Celery
-- Beautiful Bootstrap frontend
-- Comprehensive API documentation
-- Django admin interface
-
 ## Highlighted Features
 
 ### 1. Environment-Based Settings Management
@@ -64,25 +55,6 @@ The `respond` folder contains a sophisticated response management system:
 }
 ```
 
-### 3. Management Commands
-Custom Django management commands for system administration:
-
-**Create Sample Data:**
-```bash
-python manage.py create_sample_data
-```
-- Creates test users, plans, and subscriptions
-- Populates database with realistic data
-- Perfect for development and testing
-
-**Test Celery Tasks:**
-```bash
-python manage.py test_celery
-```
-- Tests background task execution
-- Validates Celery configuration
-- Ensures periodic tasks are working
-
 ## Setup Instructions
 
 ### 1. Clone the Repository
@@ -118,6 +90,25 @@ python manage.py migrate
 python manage.py create_sample_data
 python manage.py createsuperuser
 ```
+
+### Management Commands
+Custom Django management commands for system administration:
+
+**Create Sample Data:**
+```bash
+python manage.py create_sample_data
+```
+- Creates test users, plans, and subscriptions
+- Populates database with realistic data
+- Perfect for development and testing
+
+**Test Celery Tasks:**
+```bash
+python manage.py test_celery
+```
+- Tests background task execution
+- Validates Celery configuration
+- Ensures periodic tasks are working
 
 ### 6. Run the Server
 ```bash
