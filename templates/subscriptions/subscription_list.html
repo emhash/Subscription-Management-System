@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}All Subscriptions - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2">
+                <i class="fas fa-users me-2"></i>
+                All User Subscriptions
+            </h1>
+            <div class="badge bg-primary fs-6">
+                Total: {{ subscriptions|length }}
+            </div>
+        </div>
+
+        {% if subscriptions %}
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">
+                                    <i class="fas fa-user me-1"></i>
+                                    Username
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-tag me-1"></i>
+                                    Plan
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-dollar-sign me-1"></i>
+                                    Price
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    Start Date
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-calendar-times me-1"></i>
+                                    End Date
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Status
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Duration
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subscription in subscriptions %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-2">
+                                            <i class="fas fa-user text-white"></i>
+                                        </div>
+                                        <div>
+                                            <strong>{{ subscription.user.username }}</strong>
+                                            {% if subscription.user.email %}
+                                            <br><small class="text-muted">{{ subscription.user.email }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>{{ subscription.plan.name }}</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        ${{ subscription.plan.price }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small>{{ subscription.start_date|date:"M d, Y" }}</small>
+                                    <br>
+                                    <small class="text-muted">{{ subscription.start_date|time:"H:i" }}</small>
+                                </td>
+                                <td>
+                                    <small>{{ subscription.end_date|date:"M d, Y" }}</small>
+                                    <br>
+                                    <small class="text-muted">{{ subscription.end_date|time:"H:i" }}</small>
+                                </td>
+                                <td>
+                                    {% if subscription.status == 'active' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            Active
+                                        </span>
+                                    {% elif subscription.status == 'cancelled' %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-times-circle me-1"></i>
+                                            Cancelled
+                                        </span>
+                                    {% elif subscription.status == 'expired' %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Expired
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ subscription.plan.duration_days }} days
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mt-4">
+            {% with active_count=subscriptions|length cancelled_count=subscriptions|length expired_count=subscriptions|length %}
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ subscriptions|length }}</h4>
+                                <p class="mb-0">Total Subscriptions</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ active_subscriptions|length|default:0 }}</h4>
+                                <p class="mb-0">Active</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ cancelled_subscriptions|length|default:0 }}</h4>
+                                <p class="mb-0">Cancelled</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-times-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ expired_subscriptions|length|default:0 }}</h4>
+                                <p class="mb-0">Expired</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}
+        </div>
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h3 class="text-muted">No Subscriptions Found</h3>
+            <p class="text-muted">There are no subscriptions in the system yet.</p>
+            <a href="/admin/" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>
+                Add Subscriptions via Admin
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+}
+</style>
+{% endblock %}

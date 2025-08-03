@@ -8,9 +8,14 @@ class StandardizedJSONRenderer(JSONRenderer):
         response = renderer_context.get("response") if renderer_context else None
         status_code = getattr(response, "status_code", 200)
 
+        #  if the response is already standardized==>>
+        if isinstance(data, dict) and "success" in data and "status_code" in data:
+            # Response is already standardized, return as is==>>
+            return super().render(data, accepted_media_type, renderer_context)
+
         success = 200 <= status_code < 400
 
-        # Default placeholders
+        # common
         message = ""
         data_field = None
         error_details = None
@@ -24,8 +29,11 @@ class StandardizedJSONRenderer(JSONRenderer):
                 if status_code == 400 and self._is_validation_error(data):
                     message = "Validation error occurred."
                     error_details = self._format_validation_error(data)
+                elif status_code == 400 and "errors" in data:
+                    message = data.get("message", "Validation error occurred.")
+                    error_details = self._format_validation_error(data["errors"])
                 else:
-                    # Handle other error types (403, 401, 404, etc.)
+                    # other errors
                     if "detail" in data:
                         message = str(data["detail"])
                         error_details = data
@@ -34,7 +42,7 @@ class StandardizedJSONRenderer(JSONRenderer):
             else:
                 data_field = data
         else:
-            # Non-dict data (e.g. list, string, etc.)
+            # non-dict data - list, string, etc.
             if success:
                 data_field = data
             else:
@@ -44,14 +52,14 @@ class StandardizedJSONRenderer(JSONRenderer):
 
         standardized = {
             "success": success,
-            "statusCode": status_code,
+            "status_code": status_code,
             "message": message,
         }
 
         if success:
-            standardized["Data"] = data_field
+            standardized["data"] = data_field
         else:
-            standardized["errorDetails"] = error_details
+            standardized["error_details"] = error_details
 
         return super().render(standardized, accepted_media_type, renderer_context)
 
@@ -65,6 +73,8 @@ class StandardizedJSONRenderer(JSONRenderer):
         return False
 
     def _format_validation_error(self, data):
+        formatted_errors = []
+        
         for field, errors in data.items():
             if field != "detail":
                 if isinstance(errors, list) and errors:
@@ -74,12 +84,12 @@ class StandardizedJSONRenderer(JSONRenderer):
                 else:
                     error_message = "Invalid value."
                 
-                return {
+                formatted_errors.append({
                     "field": field,
                     "message": error_message
-                }
+                })
         
-        return {
-            "field": "unknown",
-            "message": "Validation error occurred."
-        } 
+        if len(formatted_errors) == 1:
+            return formatted_errors[0]
+        else:
+            return formatted_errors 

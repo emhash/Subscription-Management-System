@@ -1,3 +1,3 @@
 from django.shortcuts import render
-
-# Create your views here.
+from .views.api_view import *
+from .views.mvt_view import *

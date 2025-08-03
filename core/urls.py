@@ -5,7 +5,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/api/docs/', permanent=False), name='homepage'),
     path('admin/', admin.site.urls),
 
     # API Documentation
@@ -14,10 +13,13 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
 
-    # APIs ==>
-    # path('api/v1/auth/', include('apps.users.urls')),
-    # path('api/v1/orders/', include('apps.orders.urls')),
-    # path('api/v1/payments/', include('apps.payments.urls')),
+    # Subscription APIs and Frontend ==>
+    path('api/', include('apps.subscription.urls')),
+    path('', include('apps.subscription.urls')),
     
+    # JWT Auth==>
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 
 ]

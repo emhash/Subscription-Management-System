@@ -36,10 +36,14 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'drf_spectacular',
     # 'django_extensions',
+    
+    # Celery apps
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 LOCAL_APPS = [
-    # 'apps.accounts',
+    'apps.subscription',
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -103,4 +107,5 @@ TAGGIT_CASE_INSENSITIVE = True
 # << --- cors, credentials, and configurations --- >>
 from .credentials.stripe import *
 from .configurations.restapi import *
+from .configurations.celery_settings import *
 # << --- cors, credentials, and configurations --- >>
